@@ -1,0 +1,30 @@
+# dependencies
+node_modules/
+
+# secrets
+.env
+.env.local
+
+# runtime data (SQLite DB, WAL, audit log)
+data/*.db
+data/*.db-shm
+data/*.db-wal
+data/audit.log
+
+# backups
+backups/
+
+# test / temp output
+test-output.txt
+server-start-out.txt
+*.log
+*.tmp
+*.bak
+
+# OS
+.DS_Store
+Thumbs.db
+
+# editor
+.vscode/
+.idea/

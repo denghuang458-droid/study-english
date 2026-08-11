@@ -1,0 +1,25 @@
+【手机访问说明】
+
+1. 双击「start-server.bat」启动本地服务器（黑色窗口保持开着，别关）
+2. 把手机和电脑连到【同一个 Wi-Fi】
+3. 在手机浏览器（Chrome / Edge / 夸克等）地址栏输入黑色窗口里显示的地址，例如：
+     http://192.168.xxx.xxx:8000/index.html
+4. 如果 Windows 防火墙弹出提示，点「允许访问」
+5. 想停止时，在服务器窗口按 Ctrl+C
+
+————————————
+常见问题
+————————————
+
+· 手机打不开 / 一直转圈
+  多半是防火墙拦截。以【管理员身份】打开 PowerShell，执行一次：
+  netsh advfirewall firewall add rule name="CETSite8000" dir=in action=allow protocol=TCP localport=8000
+
+· 地址变了 / 显示 127.0.0.1
+  确保手机和电脑在同一 Wi-Fi（不要用手机流量）。IP 变了就重新双击 bat 看新地址。
+
+· 学习进度、账号、桌宠数据
+  都存在【手机浏览器本地】，和电脑版各自独立，互不影响。
+
+· 电脑本地也可以直接打开
+  在电脑浏览器访问 http://localhost:8000/index.html

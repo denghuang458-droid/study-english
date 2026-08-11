@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>麻薯米麻薯 · 四六级英语学习</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=20260822" />
+</head>
+<body>
+  <div class="bg-decoration">
+    <div class="stars" id="bgStars"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div class="app">
+    <!-- 顶部导航 -->
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">📚</span>
+        <span class="logo-text">麻薯米麻薯</span>
+        <span class="logo-sub">四六级英语学习</span>
+      </div>
+      <div class="header-actions">
+        <button id="accountBtn" class="icon-btn account-btn" title="登录 / 注册">👤</button>
+        <button id="themeToggle" class="icon-btn" title="切换主题">🌙</button>
+      </div>
+    </header>
+
+    <!-- 英语学习视图 -->
+    <section id="learnView" class="learn-view">
+      <div id="voiceHint" class="voice-hint hidden">⚠️ 未检测到英文语音，发音可能不准确。建议在系统设置中安装 Microsoft 英文语音。</div>
+      <div class="learn-topbar">
+        <div class="learn-cats">
+          <button class="cat-btn active" data-cat="cet4">🎓 四级核心</button>
+          <button class="cat-btn" data-cat="cet6">🏅 六级核心</button>
+          <button class="cat-btn" data-cat="phrases">💬 常用短语</button>
+          <button class="cat-btn" data-cat="essay">📝 作文句式</button>
+          <button class="cat-btn" data-cat="sample" title="四六级真题作文范文：跟打 + 分段背诵">📄 作文范文</button>
+          <button class="cat-btn" data-cat="wrong">📕 错题本</button>
+          <button class="cat-btn" data-cat="custom" title="按字母目录或指定单词，自选要背的词">📋 自定义</button>
+        </div>
+        <div class="learn-modes">
+          <button class="mode-btn active" data-lmode="type">✏️ 单词跟打</button>
+          <button class="mode-btn" data-lmode="dict">📝 听写测试</button>
+          <button id="wrongManageBtn" class="mode-ghost-btn hidden" title="管理错题本：单个或全部移除">🗑️ 错题管理</button>
+          <button id="customDirBtn" class="mode-ghost-btn hidden" title="重新打开自定义面板，选择要练习的单词">📋 选择单词</button>
+          <button id="essayDirBtn" class="mode-ghost-btn hidden" title="重新打开作文句式目录，选择要练习的类型">📂 目录</button>
+          <button id="sampleDirBtn" class="mode-ghost-btn hidden" title="重新打开作文范文目录，选择要背诵的范文">📄 范文目录</button>
+        </div>
+      </div>
+
+      <div class="learn-card">
+        <div class="learn-progress">
+          <div class="progress-text"><span id="learnProgressTag" class="progress-tag"></span><span id="learnCurrent">1</span> / <span id="learnTotal">20</span><span id="learnMasteryStats" class="mastery-stats"></span></div>
+          <div class="progress-track"><div id="learnBar" class="progress-fill"></div></div>
+        </div>
+
+        <div class="word-display">
+          <div id="learnStage" class="learn-stage hidden"></div>
+          <div id="learnPrompt" class="learn-prompt hidden"></div>
+          <div class="word-en" id="learnEn">apple</div>
+          <div class="word-phonetic-row">
+            <div class="word-phonetic" id="learnPhonetic">/ˈæpl/</div>
+            <button id="playBtn" class="play-btn" title="点击播放发音" aria-label="播放发音">🔊</button>
+            <button id="formsBtn" class="forms-btn" title="查看词形变化" aria-label="查看词形变化">📚 词形</button>
+          </div>
+          <div class="word-cn" id="learnCn">n. 苹果</div>
+          <div class="word-example">
+            <p class="example-en" id="learnExampleEn">I eat an apple every day.</p>
+            <p class="example-cn" id="learnExampleCn">我每天吃一个苹果。</p>
+          </div>
+          <div class="word-extras">
+            <p class="word-synonym hidden" id="learnSynonym"></p>
+            <p class="word-root hidden" id="learnRoot"></p>
+          </div>
+        </div>
+
+        <div class="learn-type-area">
+          <div id="learnSpell" class="learn-spell hidden"></div>
+          <div class="learn-input-row">
+            <input type="text" id="learnInput" class="learn-input" placeholder="在这里输入英文..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+            <button id="revealAnswerBtn" class="reveal-answer-btn hidden" title="听写模式下：显示 / 收起英文答案（翻译保留在下方）">👁️ 查看答案</button>
+          </div>
+          <div class="learn-feedback" id="learnFeedback"></div>
+        </div>
+
+        <div class="learn-actions">
+          <div class="learn-action-row">
+            <button id="learnRestart" class="btn btn-ghost">🔄 重新开始</button>
+            <button id="soundToggle" class="btn btn-ghost" title="朗读单词发音">🔊 发音：开</button>
+            <button id="keySoundToggle" class="btn btn-ghost" title="按键音效">⌨️ 音效：开</button>
+          </div>
+          <span class="learn-tip">打字跟打：输完自动下一个 · 听写：给翻译默写，Enter 判定 · 👁️ 查看答案</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 错题管理弹窗 -->
+    <div id="wrongModal" class="modal hidden">
+      <div class="modal-card wrong-modal-card">
+        <h2 class="modal-title">📕 错题管理</h2>
+        <div id="wrongManageList" class="wrong-manage-list"></div>
+        <p id="wrongEmpty" class="wrong-empty hidden">🎉 错题本空空如也～</p>
+        <div class="result-actions">
+          <button id="wrongClearAllBtn" class="btn btn-danger">🗑️ 全部移除</button>
+          <button id="wrongCloseBtn" class="btn btn-ghost">关闭</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 自定义背词弹窗 -->
+    <div id="customModal" class="modal hidden">
+      <div class="modal-card custom-modal-card">
+        <h2 class="modal-title">📋 自定义背词</h2>
+        <div class="custom-section">
+          <div class="custom-label">选择基础词库</div>
+          <div class="custom-source-row">
+            <button class="custom-source-btn active" data-csrc="cet4">🎓 四级核心</button>
+            <button class="custom-source-btn" data-csrc="cet6">🏅 六级核心</button>
+            <button class="custom-source-btn" data-csrc="phrases">💬 常用短语</button>
+          </div>
+        </div>
+        <div class="custom-section">
+          <div class="custom-label" id="customFilterLabel">在题库中勾选想要的单词</div>
+          <input type="text" id="customSearch" class="custom-search" placeholder="🔍 搜索单词 / 释义…" autocomplete="off" />
+          <div id="customLetterFilter" class="custom-letter-filter"></div>
+        </div>
+        <div class="custom-section custom-section-list">
+          <div class="custom-label"><span id="customListInfo">共 0 词 · 已选 0</span><span class="custom-letter-tools"><button id="customCheckAll" class="btn btn-ghost btn-sm">✅ 全选当前</button><button id="customUncheckAll" class="btn btn-ghost btn-sm">🗑️ 清空已选</button></span></div>
+          <div id="customWordList" class="custom-word-list"></div>
+        </div>
+        <div class="custom-section">
+          <div class="custom-label">或直接输入单词快速添加（每行一个，空格 / 逗号分隔也行）</div>
+          <textarea id="customInput" class="custom-textarea" placeholder="例如：abandon&#10;capacity, derive&#10;nucleus"></textarea>
+          <button id="customAddWords" class="btn btn-ghost btn-sm">➕ 添加</button>
+        </div>
+        <div class="custom-section">
+          <div class="custom-label">已选单词 <span id="customCount" class="custom-count">0</span></div>
+          <div id="customSelected" class="custom-selected"></div>
+        </div>
+        <div class="result-actions">
+          <button id="customStartBtn" class="btn btn-primary">▶️ 开始背诵</button>
+          <button id="customCloseBtn" class="btn btn-ghost">关闭</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 作文句式目录弹窗 -->
+    <div id="essayModal" class="modal hidden">
+      <div class="modal-card custom-modal-card">
+        <h2 class="modal-title">📝 作文句式目录</h2>
+        <div class="custom-section">
+          <div class="custom-label">按类型筛选</div>
+          <div id="essayStageFilter" class="custom-letter-filter"></div>
+        </div>
+        <div class="custom-section custom-section-list">
+          <div class="custom-label"><span id="essayListInfo">共 0 句 · 已选 0</span><span class="custom-letter-tools"><button id="essayCheckAll" class="btn btn-ghost btn-sm">✅ 全选当前</button><button id="essayUncheckAll" class="btn btn-ghost btn-sm">🗑️ 清空已选</button></span></div>
+          <div id="essayWordList" class="custom-word-list"></div>
+        </div>
+        <div class="result-actions">
+          <button id="essayStartBtn" class="btn btn-primary">▶️ 开始背诵</button>
+          <button id="essayCloseBtn" class="btn btn-ghost">关闭</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 作文范文目录弹窗 -->
+    <div id="sampleModal" class="modal hidden">
+      <div class="modal-card custom-modal-card">
+        <h2 class="modal-title">📄 作文范文目录</h2>
+        <div class="custom-section">
+          <div class="custom-label">按级别筛选（四六级分开）</div>
+          <div id="sampleLevelFilter" class="custom-letter-filter"></div>
+        </div>
+        <div class="custom-section custom-section-list">
+          <div class="custom-label"><span id="sampleListInfo">共 0 篇 · 已选 0</span><span class="custom-letter-tools"><button id="sampleCheckAll" class="btn btn-ghost btn-sm">✅ 全选当前</button><button id="sampleUncheckAll" class="btn btn-ghost btn-sm">🗑️ 清空已选</button></span></div>
+          <div id="sampleWordList" class="custom-word-list"></div>
+        </div>
+        <div class="result-actions">
+          <button id="sampleStartBtn" class="btn btn-primary">▶️ 开始背诵</button>
+          <button id="sampleCloseBtn" class="btn btn-ghost">关闭</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 账号弹窗 -->
+    <div id="accountModal" class="modal hidden">
+      <div class="modal-card account-modal-card">
+        <h2 class="modal-title" id="accountTitle">👤 登录 / 注册</h2>
+        <div class="account-field">
+          <label for="accountUser">用户名</label>
+          <input type="text" id="accountUser" placeholder="输入用户名（1-12 位）" autocomplete="off" />
+        </div>
+        <div class="account-field">
+          <label for="accountPass">密码</label>
+          <input type="password" id="accountPass" placeholder="输入密码" autocomplete="off" />
+        </div>
+        <div class="account-msg" id="accountMsg"></div>
+        <label class="account-agree">
+          <input type="checkbox" id="accountAgree" />
+          <span>我已阅读并同意《用户协议》与《隐私政策》（仅收集用户名与密码，用于账号登录与进度保存）</span>
+        </label>
+        <div class="account-actions">
+          <button id="accountLoginBtn" class="btn btn-primary">🔑 登录</button>
+          <button id="accountRegBtn" class="btn btn-ghost">✨ 注册</button>
+        </div>
+        <div class="account-status hidden" id="accountStatus"></div>
+        <div class="account-change hidden" id="accountChangeArea">
+          <hr class="account-divider" />
+          <div class="custom-label">🔒 修改密码</div>
+          <div class="account-field">
+            <label for="accountOldPass">当前密码</label>
+            <input type="password" id="accountOldPass" placeholder="输入当前密码" autocomplete="off" />
+          </div>
+          <div class="account-field">
+            <label for="accountNewPass">新密码</label>
+            <input type="password" id="accountNewPass" placeholder="至少 6 位，含字母和数字" autocomplete="off" />
+          </div>
+          <div class="account-field">
+            <label for="accountNewPass2">确认新密码</label>
+            <input type="password" id="accountNewPass2" placeholder="再次输入新密码" autocomplete="off" />
+          </div>
+          <button id="accountChangeBtn" class="btn btn-ghost">🔑 修改密码</button>
+        </div>
+        <div class="result-actions">
+          <button id="accountLogoutBtn" class="btn btn-ghost hidden">🚪 登出</button>
+          <button id="accountCloseBtn" class="btn btn-primary">关闭</button>
+        </div>
+        <p class="account-hint">💡 账号数据保存在本机浏览器，不同账号的学习进度 / 解锁 / 错题本互不影响</p>
+      </div>
+    </div>
+
+    <!-- 词形变化弹窗 -->
+    <div id="formsModal" class="modal hidden">
+      <div class="modal-card forms-card">
+        <h2 class="modal-title" id="formsTitle">词形变化</h2>
+        <div id="formsBody" class="forms-body"></div>
+        <div class="result-actions">
+          <button id="formsCloseBtn" class="btn btn-primary">关闭</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 结果面板 -->
+    <div id="resultModal" class="modal hidden">
+      <div class="modal-card">
+        <h2 class="modal-title">🎉 学习完成！</h2>
+        <div class="result-grid">
+          <div class="result-item">
+            <span class="result-num" id="resultWpm">0</span>
+            <span class="result-label">准确率</span>
+          </div>
+          <div class="result-item">
+            <span class="result-num" id="resultAcc">0%</span>
+            <span class="result-label">错误数</span>
+          </div>
+          <div class="result-item">
+            <span class="result-num" id="resultRaw">0</span>
+            <span class="result-label">用时</span>
+          </div>
+          <div class="result-item">
+            <span class="result-num" id="resultErrors">0</span>
+            <span class="result-label">总词数</span>
+          </div>
+        </div>
+        <div class="result-rating" id="resultRating"></div>
+        <div class="result-actions">
+          <button id="retryBtn" class="btn btn-primary">🔄 再学一轮</button>
+          <button id="newTextBtn" class="btn btn-ghost">📝 换一组</button>
+        </div>
+      </div>
+    </div>
+    <!-- 投喂面板 -->
+    <div id="petFeedPanel" class="pet-feed-panel hidden">
+      <div class="pet-feed-title">🍽️ 投喂小可爱</div>
+      <div id="petFeedGrid" class="pet-feed-grid"></div>
+      <div class="pet-feed-count" id="petFeedCount">已投喂 0 次</div>
+      <div class="pet-feed-hint" id="petFeedHint"></div>
+    </div>
+    <!-- 麻薯衣橱 -->
+    <div id="petModal" class="modal hidden">
+      <div class="modal-card pet-modal-card">
+        <h2 class="modal-title">♈ 十二星座形象</h2>
+        <div class="pet-time-bar">
+          <div class="pet-time-head">
+            <span id="petTimeLabel" class="pet-time-label">⏱️ 累计学习 0 秒</span>
+            <span id="petNextUnlock" class="pet-next-unlock"></span>
+          </div>
+          <div class="pet-time-track"><div id="petTimeBar" class="pet-time-fill"></div></div>
+        </div>
+        <div id="petOutfitGrid" class="pet-outfit-grid"></div>
+        <div class="pet-decor-section">
+          <div class="pet-decor-title">💇 发饰搭配（可叠加在星座形象上）</div>
+          <div id="petDecorGrid" class="pet-decor-grid"></div>
+        </div>
+        <p class="pet-tip">💡 解锁采用"清零重计"：每件物品需单独攒够学习时间，解锁消耗的时间不会叠加到下一件～</p>
+        <div class="result-actions">
+          <button id="petCloseBtn" class="btn btn-primary">关闭</button>
+        </div>
+      </div>
+    </div>
+    <!-- 麻薯桌宠 -->
+    <div id="petWrap" class="pet-wrap">
+      <button id="petWardrobeBtn" class="pet-wardrobe-btn" title="十二星座形象：按学习时长解锁" aria-label="十二星座形象">♈</button>
+      <div id="pet" class="pet pet-idle" title="点击打开衣橱">
+        <canvas id="petCanvas" width="128" height="128"></canvas>
+        <div id="petBubble" class="pet-bubble hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="vocab-data.js?v=20260808"></script>
+<script src="phrases-data.js?v=20260811"></script>
+<script src="essay-data.js?v=20260809"></script>
+<script src="sample-data.js?v=20260819"></script>
+<script src="script.js?v=20260836"></script>
+</body>
+</html>
