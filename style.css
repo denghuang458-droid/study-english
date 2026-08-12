@@ -609,6 +609,18 @@ body {
 .account-actions { display: flex; gap: 10px; justify-content: center; margin-bottom: 12px; }
 .account-status { font-size: 12px; color: var(--text-dim); margin-bottom: 12px; }
 .account-hint { font-size: 11px; color: var(--text-dim); text-align: center; margin-top: 10px; }
+
+/* ---------- 欢迎使用引导 ---------- */
+.welcome-card { max-width: 560px; text-align: left; }
+.welcome-sub { font-size: 13px; color: var(--text-dim); text-align: center; margin: -6px 0 16px; line-height: 1.6; }
+.welcome-steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.welcome-step { display: flex; gap: 12px; align-items: flex-start; background: var(--bg-soft); border: 1px solid var(--card-border); border-radius: 12px; padding: 11px 14px; }
+.welcome-num { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.welcome-step b { display: block; font-size: 14px; color: var(--text); margin-bottom: 2px; }
+.welcome-step p { margin: 0; font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+.welcome-points { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 16px; }
+.welcome-points span { font-size: 12px; font-weight: 700; color: var(--text-dim); background: var(--card); border: 1px solid var(--card-border); border-radius: 999px; padding: 5px 12px; }
+.welcome-card .result-actions { text-align: center; }
 .account-agree { display: flex; align-items: flex-start; gap: 6px; font-size: 11px; color: var(--text-dim); margin-bottom: 10px; text-align: left; line-height: 1.5; }
 .account-agree input { margin-top: 2px; accent-color: var(--accent); }
 .account-divider { border: none; border-top: 1px solid var(--card-border); margin: 12px 0 10px; }

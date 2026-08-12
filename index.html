@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=20260822" />
+  <link rel="stylesheet" href="style.css?v=20260823" />
 </head>
 <body>
   <div class="bg-decoration">
@@ -26,6 +26,7 @@
         <span class="logo-sub">四六级英语学习</span>
       </div>
       <div class="header-actions">
+        <button id="helpBtn" class="icon-btn" title="使用引导">❓</button>
         <button id="accountBtn" class="icon-btn account-btn" title="登录 / 注册">👤</button>
         <button id="themeToggle" class="icon-btn" title="切换主题">🌙</button>
       </div>
@@ -188,6 +189,27 @@
       </div>
     </div>
 
+    <!-- 欢迎使用引导（首次访问自动弹出） -->
+    <div id="welcomeModal" class="modal hidden">
+      <div class="modal-card welcome-card">
+        <h2 class="modal-title">📚 欢迎来到麻薯米麻薯</h2>
+        <p class="welcome-sub">练打字 + 学四六级，一个页面搞定 · 作文句式 / 范文覆盖往届真题</p>
+        <div class="welcome-steps">
+          <div class="welcome-step"><span class="welcome-num">1</span><div><b>选分类</b><p>四级核心 / 六级核心 / 常用短语 / 作文句式 / 真题范文</p></div></div>
+          <div class="welcome-step"><span class="welcome-num">2</span><div><b>选模式</b><p>✏️ 单词跟打（看英文打英文）· 📝 听写测试（看翻译默写）</p></div></div>
+          <div class="welcome-step"><span class="welcome-num">3</span><div><b>开始打</b><p>打对自动下一个 · 打错自动进错题本，连续做对 3 次自动移出</p></div></div>
+        </div>
+        <div class="welcome-points">
+          <span>🎓 四级 2805 词</span><span>🏅 六级 2353 词</span><span>💬 短语 494 条</span>
+          <span>📝 句式 122 条</span><span>📄 真题范文 16 篇</span><span>📱 手机电脑都能用</span>
+        </div>
+        <div class="result-actions">
+          <button id="welcomeCloseBtn" class="btn btn-primary">🚀 开始学习</button>
+          <button id="welcomeDontShowBtn" class="btn btn-ghost">不再提示</button>
+        </div>
+      </div>
+    </div>
+
     <!-- 账号弹窗 -->
     <div id="accountModal" class="modal hidden">
       <div class="modal-card account-modal-card">
@@ -318,6 +340,6 @@
 <script src="phrases-data.js?v=20260811"></script>
 <script src="essay-data.js?v=20260809"></script>
 <script src="sample-data.js?v=20260819"></script>
-<script src="script.js?v=20260839"></script>
+<script src="script.js?v=20260841"></script>
 </body>
 </html>

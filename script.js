@@ -1953,6 +1953,27 @@ function setupAccount() {
   window.addEventListener('beforeunload', cloudSync);
 }
 
+// ============ 欢迎使用引导（首次访问自动弹出，可随时重看） ============
+const WELCOME_SEEN = 'welcome-seen';
+function setupWelcome() {
+  const modal = $('welcomeModal');
+  if (!modal) return;
+  function closeWelcome() {
+    modal.classList.add('hidden');
+    try { localStorage.setItem(WELCOME_SEEN, '1'); } catch (e) {}
+  }
+  $('helpBtn').addEventListener('click', () => modal.classList.remove('hidden'));
+  $('welcomeCloseBtn').addEventListener('click', closeWelcome);
+  $('welcomeDontShowBtn').addEventListener('click', closeWelcome);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeWelcome(); });
+  // 首次访问自动弹出（等页面加载完成后再展示）
+  let seen = false;
+  try { seen = localStorage.getItem(WELCOME_SEEN) === '1'; } catch (e) {}
+  if (!seen) {
+    setTimeout(() => modal.classList.remove('hidden'), 800);
+  }
+}
+
 // ============ 初始化 ============
 // 星空粒子背景：随机生成闪烁星星 + 漂浮光点
 function initStars() {
@@ -1989,6 +2010,7 @@ function init() {
   window.addEventListener('beforeunload', saveLearnSession);
   setupPet();
   setupAccount();
+  setupWelcome();
   $('retryBtn').addEventListener('click', handleRetry);
   $('newTextBtn').addEventListener('click', handleNewText);
   // 预热语音引擎，减少首次发音延迟
