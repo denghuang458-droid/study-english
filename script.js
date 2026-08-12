@@ -1655,14 +1655,27 @@ async function cloudRequest(path, options) {
   const headers = Object.assign({ 'Content-Type': 'application/json' }, opts.headers || {});
   const token = localStorage.getItem(CLOUD_TOKEN);
   if (token) headers.Authorization = 'Bearer ' + token;
-  const res = await fetch('/api' + path, Object.assign({}, opts, { headers }));
+  let res;
+  try {
+    res = await fetch('/api' + path, Object.assign({}, opts, { headers }));
+  } catch (e) {
+    // 网络错误（后端未部署/不可达）：标记云端不可用，调用方可降级到本地账号
+    const err = new Error('网络请求失败');
+    err.cloudUnavailable = true;
+    throw err;
+  }
   // token 过期/被吊销：尝试刷新一次后重试
   if (res.status === 401 && !opts._retried && localStorage.getItem(CLOUD_TOKEN)) {
     const ok = await cloudRefresh();
     if (ok) return cloudRequest(path, Object.assign({}, opts, { _retried: true }));
   }
   const body = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(body.error || '网络请求失败');
+  if (!res.ok) {
+    const err = new Error(body.error || '网络请求失败');
+    // 404：静态托管/未部署后端（如 Cloudflare Pages），视为云端不可用
+    if (res.status === 404) err.cloudUnavailable = true;
+    throw err;
+  }
   return body;
 }
 
@@ -1793,7 +1806,11 @@ async function cloudChangePassword(oldPass, newPass) {
   try {
     await cloudRequest('/auth/password', { method: 'PUT', body: JSON.stringify({ oldPassword: oldPass, newPassword: newPass }) });
     return '';
-  } catch (e) { return '❌ ' + e.message; }
+  } catch (e) {
+    // 云端不可用：降级到本地账号改密
+    if (e && e.cloudUnavailable) return await accChangePassword(oldPass, newPass);
+    return '❌ ' + e.message;
+  }
 }
 async function accChangePassword(oldPass, newPass) {
   const name = accUserName();
@@ -1863,11 +1880,20 @@ function setupAccount() {
     if (e.target === $('accountModal')) $('accountModal').classList.add('hidden');
   });
   $('accountLoginBtn').addEventListener('click', async () => {
+    const name = $('accountUser').value.trim();
+    const pass = $('accountPass').value;
     try {
-      await cloudLogin($('accountUser').value.trim(), $('accountPass').value);
+      await cloudLogin(name, pass);
       location.reload();
     } catch (e) {
-      $('accountMsg').textContent = '❌ ' + e.message;
+      if (e && e.cloudUnavailable) {
+        // 云端不可用（静态托管/未部署后端）：自动降级到本地账号
+        const localErr = await accLogin(name, pass);
+        if (localErr) $('accountMsg').textContent = localErr;
+        else location.reload();
+      } else {
+        $('accountMsg').textContent = '❌ ' + e.message;
+      }
     }
   });
   $('accountRegBtn').addEventListener('click', async () => {
@@ -1887,7 +1913,14 @@ function setupAccount() {
       await cloudRegister(name, pass, true);
       location.reload();
     } catch (e) {
-      $('accountMsg').textContent = '❌ ' + e.message;
+      if (e && e.cloudUnavailable) {
+        // 云端不可用（静态托管/未部署后端）：自动降级到本地账号
+        const localErr = await accRegister(name, pass);
+        if (localErr) $('accountMsg').textContent = localErr;
+        else location.reload();
+      } else {
+        $('accountMsg').textContent = '❌ ' + e.message;
+      }
     }
   });
   $('accountChangeBtn').addEventListener('click', async () => {
