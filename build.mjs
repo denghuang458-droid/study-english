@@ -1,10 +1,11 @@
-// Cloudflare Pages static build: copy frontend files into _site/
+// Cloudflare Pages static build: copy frontend files into dist/
+// (dist matches Cloudflare Pages' default "Build output directory")
 import { cpSync, mkdirSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
-const out = path.join(root, '_site');
+const out = path.join(root, 'dist');
 rmSync(out, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
 
