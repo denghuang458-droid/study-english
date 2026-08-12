@@ -1672,8 +1672,11 @@ async function cloudRequest(path, options) {
   const body = await res.json().catch(() => ({}));
   if (!res.ok) {
     const err = new Error(body.error || '网络请求失败');
-    // 404：静态托管/未部署后端（如 Cloudflare Pages），视为云端不可用
-    if (res.status === 404) err.cloudUnavailable = true;
+    // 云端业务响应码（401/400/409/423/429）表示后端存在，正常提示、不降级；
+    // 其他非 2xx（404/405/5xx 等，如 Cloudflare Pages 对 POST 返回 405）表示
+    // 静态托管或后端不可用 → 标记为云端不可用，调用方可降级到本地账号
+    const bizCodes = [401, 400, 409, 423, 429];
+    if (!bizCodes.includes(res.status)) err.cloudUnavailable = true;
     throw err;
   }
   return body;
