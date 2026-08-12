@@ -3372,44 +3372,10 @@ function setupLearnInput() {
     if (learnState.index >= learnState.words.length) return;
     if (learnState.lmode === 'type') {
       checkTypeProgress();
-    } else if (learnState.lmode === 'dict') {
-      // 听写默写：实时拼写检查（红色 + 音效），判定仍以 Enter 为准
-      checkDictSpell();
     }
+    // 听写模式：输入时不实时判定对错（无红字/红框/音效干扰），
+    // 按下 Enter 提交时由 handleLearnSubmit 统一判定并显示结果
   });
-}
-
-// 听写模式实时拼写反馈：默写时打错即时红色边框 + 错误音效提示，修正后自动消除（对错仍以 Enter 判定为准）
-function checkDictSpell() {
-  const w = learnState.words[learnState.index];
-  if (!w) return;
-  const target = w.en.toLowerCase();
-  const val = learnInput.value.trim().toLowerCase();
-  const errMsg = '❌ 拼写有误，检查一下';
-  if (!val) {
-    learnInput.classList.remove('wrong-input', 'correct-input');
-    if (learnFeedback.textContent === errMsg) {
-      learnFeedback.textContent = '';
-      learnFeedback.className = 'learn-feedback';
-    }
-    return;
-  }
-  if (target.startsWith(val)) {
-    // 目前打对（前缀匹配）：恢复正常
-    learnInput.classList.remove('wrong-input', 'correct-input');
-    if (learnFeedback.textContent === errMsg) {
-      learnFeedback.textContent = '';
-      learnFeedback.className = 'learn-feedback';
-    }
-  } else if (!learnInput.classList.contains('wrong-input')) {
-    // 拼写错误：红色边框 + 错误音效 + 红字提示（仅状态切换时响一次）
-    learnInput.classList.add('wrong-input');
-    learnInput.classList.remove('correct-input');
-    playKeySound('wrong');
-    setPetState('wrong');
-    learnFeedback.textContent = errMsg;
-    learnFeedback.className = 'learn-feedback bad';
-  }
 }
 
 // 学习进度防重入：防止单词打对时 input 事件重复触发跳词（会跳过一个单词）
